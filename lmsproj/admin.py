@@ -1,6 +1,6 @@
 from tkinter import E
 from django.contrib import admin
-from lmsproj.models import Account,Courses, Exam,Batch,Task,TaskSubmission,AssigningUser
+from lmsproj.models import Account,Courses, Exam,Batch,Task,TaskSubmission,BatchCourseAssign
 
 
 # Register your models here.
@@ -10,4 +10,4 @@ admin.site.register(Batch)
 admin.site.register(Exam)
 admin.site.register(Task)
 admin.site.register(TaskSubmission)
-admin.site.register(AssigningUser)
+admin.site.register(BatchCourseAssign)

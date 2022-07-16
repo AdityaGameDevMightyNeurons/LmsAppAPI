@@ -1,12 +1,12 @@
 
 from rest_framework.views import APIView
-from lmsproj.models import Account, Batch, Task, TaskSubmission
+from lmsproj.models import Account, Task, TaskSubmission
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from lmsproj.models import Account, TaskSubmission, Task
 from lmsproj.studentserializer import TsksubmissionSerializer
-from lmsproj.utils import GetCompletedandPendingTask
+from lmsproj.utils import GetCompletedandPendingTask,GetExamData
 
 
 
@@ -35,7 +35,22 @@ class AllTaskinfo(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request):
         CurrentStudent_Id= request.user.id
-        print(CurrentStudent_Id)
         Completed,Pending = GetCompletedandPendingTask(studentid=CurrentStudent_Id)
         return Response({"msg":"Student Task","data":{"completed":Completed,"pending":Pending}, "status":status.HTTP_201_CREATED})
+
+
+class AllExamInfo(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        ExamData = GetExamData(userid=request.user.id)
+        return Response({"msg":"Student Exam Details","data":ExamData, "status":status.HTTP_201_CREATED})
+
+
+
+
+
+
+
+
+
 

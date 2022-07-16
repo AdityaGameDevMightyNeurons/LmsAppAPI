@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from lmsproj.createserilizers import CreateCourseSerializer,CreateBatchSerializer, CreateTaskSerializer
+from lmsproj.createserilizers import CreateCourseSerializer,CreateBatchSerializer, CreateTaskSerializer,CreateExamSerializer
 from rest_framework.permissions import IsAuthenticated
-from lmsproj.models import Account,Courses,Batch, Task
+from lmsproj.models import Account,Courses,Batch, Exam, Task
 from lmsproj.utils import TeacherObjs
 import datetime
 
@@ -82,9 +82,36 @@ class CreateTask(APIView):
                 return Response({"msg":"Task Created", "status":status.HTTP_201_CREATED})
 
             except Exception as e:
-                return Response({"msg":"Tsk not Created","error":e, "status":status.HTTP_417_EXPECTATION_FAILED})
+                return Response({"msg":"Tsk not Created","error":str(e), "status":status.HTTP_417_EXPECTATION_FAILED})
 
         return Response({"msg":"Task not Created","error":"Serializer is not Valid", "status":status.HTTP_401_UNAUTHORIZED})
+
+
+
+class CreateExam(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request):
+        Serializer = CreateExamSerializer(data=request.data)
+        if Serializer.is_valid(raise_exception=True):
+            try:
+                CourseObj= Courses.objects.get(id = int(request.data["course"]))
+                BatchObj = Batch.objects.get(id = int(request.data["batch"]))
+                ExamDate = datetime.datetime.strptime(request.data["examdate"],"%Y-%m-%d %I:%M")
+                
+                validated_data = request.data
+                Exam.objects.create(name = validated_data["name"],details = validated_data["details"],examdate=ExamDate,duration = int(validated_data["duration"]),batch = BatchObj,course= CourseObj,
+                                    firstquestion = validated_data["firstquestion"],firstqsnoptionone = validated_data["firstqsnoptionone"],firstqsnoptiontwo = validated_data["firstqsnoptiontwo"],firstqsnoptionthree = validated_data["firstqsnoptionthree"],firstqsnoptionfour = validated_data["firstqsnoptionfour"],firstqsnAnswer=validated_data["firstqsnAnswer"],
+                                    secondquestion = validated_data["secondquestion"],secondqsnoptionone = validated_data["secondqsnoptionone"],secondqsnoptiontwo = validated_data["secondqsnoptiontwo"],secondqsnoptionthree = validated_data["secondqsnoptionthree"],secondqsnoptionfour = validated_data["secondqsnoptionfour"],secondqsnAnswer = validated_data["secondqsnAnswer"],
+                                    thirdquestion = validated_data["thirdquestion"],thirdqsnoptionone = validated_data["thirdqsnoptionone"],thirdqsnoptiontwo = validated_data["thirdqsnoptiontwo"],thirdqsnoptionthree = validated_data["thirdqsnoptionthree"],thirdqsnoptionfour = validated_data["thirdqsnoptionfour"],thirdqsnAnswer = validated_data["thirdqsnAnswer"],
+                                    fourthquestion = validated_data["fourthquestion"],fourthqsnoptionone = validated_data["fourthqsnoptionone"],fourthqsnoptiontwo = validated_data["fourthqsnoptiontwo"],fourthqsnoptionthree = validated_data["fourthqsnoptionthree"],fourthqsnoptionfour = validated_data["fourthqsnoptionfour"],fourthqsnAnswer = validated_data["fourthqsnAnswer"],
+                                    fifthquestion = validated_data["fifthquestion"],fifthqsnoptionone = validated_data["fifthqsnoptionone"],fifthqsnoptiontwo = validated_data["fifthqsnoptiontwo"],fifthqsnoptionthree = validated_data["fifthqsnoptionthree"],fifthqsnoptionfour = validated_data["fifthqsnoptionfour"],fifthqsnAnswer = validated_data["fifthqsnAnswer"])
+                return Response({"msg":"Exam Created", "status":status.HTTP_201_CREATED})
+            except Exception as e:
+                return Response({"msg":"Exam not Created","error":str(e), "status":status.HTTP_417_EXPECTATION_FAILED})
+
+        return Response({"msg":"Exam not Created","error":"Serializer is not Valid", "status":status.HTTP_401_UNAUTHORIZED})
+
+                
         
 
 

@@ -196,12 +196,12 @@ class Task(models.Model):
 
 
 
-class AssigningUser(models.Model):
+class BatchCourseAssign(models.Model):
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="assigingusertobatch")
     course = models.ForeignKey(Courses, on_delete=models.CASCADE,null=True, related_name="Assign_Course")
     activeModule = models.CharField(max_length=20,default="n/a")
-    student = models.ForeignKey(User_Model,on_delete=models.CASCADE, related_name="Student_Object")
-    teacher = models.ForeignKey(User_Model, on_delete=models.CASCADE, related_name="teacher_Object")
+    user = models.ForeignKey(User_Model,on_delete=models.CASCADE)
+
 
 
 class TaskSubmission(models.Model):

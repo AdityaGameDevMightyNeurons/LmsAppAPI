@@ -1,4 +1,3 @@
-from pyexpat import model
 from rest_framework import serializers
 from lmsproj.models import Courses, Exam, Task, Batch
 
@@ -31,3 +30,15 @@ class CreateTaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = ("name","details","startdate",
                 "enddate","batch","task")
+
+
+
+class CreateExamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ("name","details","examdate","duration","batch","course",
+                "firstquestion","firstqsnoptionone","firstqsnoptiontwo","firstqsnoptionthree","firstqsnoptionfour","firstqsnAnswer",
+                "secondquestion","secondqsnoptionone","secondqsnoptiontwo","secondqsnoptionthree","secondqsnoptionfour","secondqsnAnswer",
+                "thirdquestion","thirdqsnoptionone","thirdqsnoptiontwo","thirdqsnoptionthree","thirdqsnoptionfour","thirdqsnAnswer",
+                "fourthquestion","fourthqsnoptionone","fourthqsnoptiontwo","fourthqsnoptionthree","fourthqsnoptionfour","fourthqsnAnswer",
+                "fifthquestion","fifthqsnoptionone","fifthqsnoptiontwo","fifthqsnoptionthree","fifthqsnoptionfour","fifthqsnAnswer")

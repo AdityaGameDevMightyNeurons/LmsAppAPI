@@ -34,7 +34,7 @@ class SignIn(APIView):
 
 
 class SignOut(APIView):
-    def post(self, request):
+    def get(self, request):
         logout(request)
         return Response({'msg': 'Successfully Logged out'}, status=status.HTTP_200_OK)
 

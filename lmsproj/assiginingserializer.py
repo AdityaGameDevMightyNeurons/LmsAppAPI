@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from lmsproj.models import AssigningUser
+from lmsproj.models import BatchCourseAssign
 
 
 
 
 
-class AssigningUserSerializer(serializers.ModelSerializer):
+class BatchCourseAssignSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AssigningUser
-        fields = ("batch","course","activeModule","student","teacher")
+        model = BatchCourseAssign
+        fields = ("batch","course","activeModule","user")

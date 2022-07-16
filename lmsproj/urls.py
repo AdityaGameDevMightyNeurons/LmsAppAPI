@@ -1,5 +1,5 @@
 from django.urls import path
-from lmsproj.views import Signup, SignIn,SignOut,CreateCourse,AllUsers,AllCourses,CreateBatch,AllBatch,CreateTask,AssignUser,TaskSubmit,AllTaskinfo,AllTask,ProfileDetails,GetEventsTeacherandBatchWise
+from lmsproj.views import Signup, SignIn,SignOut,CreateCourse,AllUsers,AllCourses,CreateBatch,AllBatch,CreateTask,AssignUser,TaskSubmit,AllTaskinfo,AllTask,ProfileDetails,GetEventsTeacherandBatchWise,CreateExam,AllExamInfo,AllExam,AllAssignments
 
 urlpatterns = [
    path("Signup/",view=Signup.as_view(),name="Signup"),
@@ -17,4 +17,8 @@ urlpatterns = [
    path("AllTask/",view=AllTask.as_view(),name="AllTask"),
    path("ProfileDetails/",view=ProfileDetails.as_view(),name="ProfileDetails"),
    path("GetEventsTeacherandBatchWise/",view=GetEventsTeacherandBatchWise.as_view(),name="GetEventsTeacherandBatchWise"),
+   path("CreateExam/",view=CreateExam.as_view(),name="CreateExam"),
+   path("AllExamInfo/",view=AllExamInfo.as_view(),name="AllExamInfo"),
+   path("AllExam/",view=AllExam.as_view(),name="AllExam"),
+   path("AllAssignments/",view=AllAssignments.as_view(),name="AllAssignments"),
 ]

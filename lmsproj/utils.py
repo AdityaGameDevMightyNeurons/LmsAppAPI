@@ -1,5 +1,5 @@
 from rest_framework_simplejwt.tokens import RefreshToken
-from lmsproj.models import Account,AssigningUser, Batch,TaskSubmission,Task
+from lmsproj.models import Account,BatchCourseAssign,TaskSubmission,Task,Exam
 from django.contrib.auth.hashers import check_password
 
 def get_tokens_for_user(user):
@@ -64,7 +64,7 @@ def TeacherObjs(data):
 
 def GetCompletedandPendingTask(studentid):
     
-    Batch_Id = AssigningUser.objects.filter(student = 1).values("batch")[0]["batch"]
+    Batch_Id = BatchCourseAssign.objects.filter(user = studentid).values("batch")[0]["batch"]
     QuarySet = Task.objects.all().filter(batch = Batch_Id).values("id","name","details","startdate","enddate","task","isActive")
     Submitted_Task_List = []
     Pending_Task_List = []
@@ -86,9 +86,9 @@ def GetCompletedandPendingTask(studentid):
 
 def GetProfileData(userid):
     
-    UserObj = AssigningUser.objects.select_related("batch").get(student=userid).student
-    CourseObj = AssigningUser.objects.select_related("course").get(student=userid).course
-    BatchObj = AssigningUser.objects.select_related("batch").get(student=userid).batch
+    UserObj = BatchCourseAssign.objects.select_related("batch").get(user=userid).student
+    CourseObj = BatchCourseAssign.objects.select_related("course").get(user=userid).course
+    BatchObj = BatchCourseAssign.objects.select_related("batch").get(user=userid).batch
 
     ObjectList = [
         {
@@ -108,8 +108,8 @@ def GetProfileData(userid):
 
 
 
-#Exam to be Added here in latest events
-def GetEventsData(isAdmin =False,isTeacher=False,isStudent=False, userid=None):
+
+def GetEventsData(isAdmin =False, userid=None):
     List = []
     List_of_Task = []
 
@@ -121,8 +121,8 @@ def GetEventsData(isAdmin =False,isTeacher=False,isStudent=False, userid=None):
     if isAdmin:
         TaskData = Task.objects.all().values("name","startdate").order_by("-date_created")
         return TaskData
-    elif isTeacher:
-        obj = AssigningUser.objects.select_related("batch").filter(teacher = userid)
+    else:
+        obj = BatchCourseAssign.objects.select_related("batch").filter(user = userid)
         
         if obj != None:
             for i in obj:
@@ -133,17 +133,41 @@ def GetEventsData(isAdmin =False,isTeacher=False,isStudent=False, userid=None):
         
             return List_of_Task
 
-    elif isStudent:
-        obj = AssigningUser.objects.select_related("batch").filter(student = userid)
-        
-        if obj != None:
+
+def GetExamData(userid = None):
+    List = []
+    List_of_Exam = []
+    if len(List)>0:
+        List.clear()
+    if len(List_of_Exam)>0:
+        List_of_Exam.clear()
+
+    if userid != None:
+        try:
+            obj = BatchCourseAssign.objects.select_related("batch").filter(user = userid)
+            # print(obj)
             for i in obj:
                 if i.batch_id not in List:
                     List.append(i.batch_id)
-                    TaskDetails = Task.objects.filter(batch = i.batch_id ).values("name","startdate").order_by("-date_created")
-                    List_of_Task.append(TaskDetails)
+                    print(List)
+                    ExamDetails = Exam.objects.filter(batch = i.batch_id ).values("name","details","examdate","duration","course",
+                                                                                    "firstquestion","firstqsnoptionone","firstqsnoptiontwo","firstqsnoptionthree","firstqsnoptionfour","firstqsnAnswer",
+                                                                                    "secondquestion","secondqsnoptionone","secondqsnoptiontwo","secondqsnoptionthree","secondqsnoptionfour","secondqsnAnswer",
+                                                                                    "thirdquestion","thirdqsnoptionone","thirdqsnoptiontwo","thirdqsnoptionthree","thirdqsnoptionfour","thirdqsnAnswer",
+                                                                                    "fourthquestion","fourthqsnoptionone","fourthqsnoptiontwo","fourthqsnoptionthree","fourthqsnoptionfour","fourthqsnAnswer",
+                                                                                    "fifthquestion","fifthqsnoptionone","fifthqsnoptiontwo","fifthqsnoptionthree","fifthqsnoptionfour","fifthqsnAnswer").order_by("-examdate")
+                    List_of_Exam.append(ExamDetails)
+            return List_of_Exam
+        except:
+            return None
+    else:
+        return None
+                
+
+
+
         
-            return List_of_Task
+
 
         
                 
